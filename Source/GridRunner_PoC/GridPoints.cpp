@@ -9,9 +9,8 @@
 // Sets default values
 AGridPoints::AGridPoints()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -19,16 +18,16 @@ void AGridPoints::BeginPlay()
 {
 	Super::BeginPlay();
 
-	for(int i = 0; i < NUM_X; i++)
+	for (int i = 0; i < NUM_X; i++)
 	{
-		for(int j = 0; j < NUM_Y; j++)
+		for (int j = 0; j < NUM_Y; j++)
 		{
-			for(int k = 0; k < NUM_Z; k++)
+			for (int k = 0; k < NUM_Z; k++)
 			{
 				int x = i * GAP;
 				int y = j * GAP;
 				int z = k * GAP + Z_OFFSET;
-				FVector loc = FVector(x,y,z);
+				FVector loc = FVector(x, y, z);
 				//  TODO - add more defensive checks here incase of null's etc
 				Points.Push(Cast<APointActor>(GetWorld()->SpawnActor(PointClass, &loc)));
 			}
@@ -36,7 +35,7 @@ void AGridPoints::BeginPlay()
 	}
 
 	// Generate an random initial connector
-	if(ConnectorClass != nullptr)
+	if (ConnectorClass != nullptr)
 	{
 		// TODO - generate a random start position??
 		int indx = 8;
@@ -45,14 +44,13 @@ void AGridPoints::BeginPlay()
 		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
 		SetConnectorSpline(ConnActor);
 	}
-		
 }
 
 void AGridPoints::SetConnectorSpline(AActor* GeneratedActor)
 {
 	AConnector* Connector = Cast<AConnector>(GeneratedActor);
-		
-	if(Connector)
+
+	if (Connector)
 	{
 		Connectors.Push(Connector);
 		ConnectorSpline = Connector->GetSpline();
@@ -67,7 +65,7 @@ void AGridPoints::Tick(float DeltaTime)
 
 void AGridPoints::ClearPoints()
 {
-	for(APointActor* Point : SelectedPoints)
+	for (APointActor* Point : SelectedPoints)
 	{
 		Point->Tags.Remove(SelectedTag);
 	}
@@ -92,14 +90,14 @@ void AGridPoints::ConnectPoints(APointActor* StartPoint, APointActor* EndPoint)
 	FVector sloc = StartPoint->GetActorLocation();
 	FVector diff = EndPoint->GetActorLocation() - sloc;
 	FRotator rot = diff.Rotation();
-	
+
 	GetWorld()->SpawnActor(ConnectorClass, &sloc, &rot);
 }
 
 void AGridPoints::BuildConnection(AActor* StartPoint, FVector Direction)
 {
-    // UE_LOG(LogTemp, Warning, TEXT("Actor : %s"), *StartPoint->GetName());
-	
+	// UE_LOG(LogTemp, Warning, TEXT("Actor : %s"), *StartPoint->GetName());
+
 	FVector Location = StartPoint->GetActorLocation();
 	FRotator Rot = Direction.Rotation();
 	AActor* SpawnedActor = GetWorld()->SpawnActor(ConnectorClass, &Location, &Rot);
@@ -108,20 +106,21 @@ void AGridPoints::BuildConnection(AActor* StartPoint, FVector Direction)
 
 void AGridPoints::TogglePointsVisible()
 {
-		if (PointsVisible)
+	if (PointsVisible)
+	{
+		for (APointActor* Point : Points)
 		{
-			for(APointActor* Point : Points)
-			{
-				Point->Tags.Add("HIDDEN");
-			}
-		} else
-		{
-			for(APointActor* Point : Points)
-			{
-				Point->Tags.Remove("HIDDEN");
-			}
+			Point->Tags.Add("HIDDEN");
 		}
-	
+	}
+	else
+	{
+		for (APointActor* Point : Points)
+		{
+			Point->Tags.Remove("HIDDEN");
+		}
+	}
+
 	PointsVisible = !PointsVisible;
 }
 
@@ -129,4 +128,3 @@ USplineComponent* AGridPoints::GetConnectorSpline()
 {
 	return ConnectorSpline;
 }
-

@@ -20,7 +20,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -43,13 +43,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float EndHitOffset = 100.f;
-	
+
 	UPROPERTY(EditAnywhere)
 	float X_OFFSET = 0.f;
 
 	UPROPERTY(EditAnywhere)
 	float Y_OFFSET = 0.f;
-	
+
 	UPROPERTY(EditAnywhere)
 	float Z_OFFSET = 0.f;
 

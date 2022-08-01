@@ -11,7 +11,7 @@
 // Sets default values
 AGridRunnerCharacter::AGridRunnerCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -19,11 +19,11 @@ AGridRunnerCharacter::AGridRunnerCharacter()
 void AGridRunnerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// Setup a Track for the character to ride on
-	if(GridPoints)
+	if (GridPoints)
 	{
-		ConnectorSplineRef = GridPoints->GetConnectorSpline();	
+		ConnectorSplineRef = GridPoints->GetConnectorSpline();
 	}
 }
 
@@ -31,7 +31,6 @@ void AGridRunnerCharacter::BeginPlay()
 void AGridRunnerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -39,17 +38,21 @@ void AGridRunnerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("ToggleVisible", EInputEvent::IE_Pressed, this, &AGridRunnerCharacter::TogglePointsVisible);
+	PlayerInputComponent->BindAction("ToggleVisible", EInputEvent::IE_Pressed, this,
+	                                 &AGridRunnerCharacter::TogglePointsVisible);
 	// Build connectors in different directions
 
-	
-	PlayerInputComponent->BindAction("BuildConnectorUp", EInputEvent::IE_Pressed, this, &AGridRunnerCharacter::BuildConnectorUp);
-	PlayerInputComponent->BindAction("BuildConnectorDown", EInputEvent::IE_Pressed, this, &AGridRunnerCharacter::BuildConnectorDown);
-	PlayerInputComponent->BindAction("BuildConnectorLeft", EInputEvent::IE_Pressed, this, &AGridRunnerCharacter::BuildConnectorLeft);
-	PlayerInputComponent->BindAction("BuildConnectorRight", EInputEvent::IE_Pressed, this, &AGridRunnerCharacter::BuildConnectorRight);
-	PlayerInputComponent->BindAction("BuildConnectorStraight", EInputEvent::IE_Pressed, this, &AGridRunnerCharacter::BuildConnectorStraight);
-	
 
+	PlayerInputComponent->BindAction("BuildConnectorUp", EInputEvent::IE_Pressed, this,
+	                                 &AGridRunnerCharacter::BuildConnectorUp);
+	PlayerInputComponent->BindAction("BuildConnectorDown", EInputEvent::IE_Pressed, this,
+	                                 &AGridRunnerCharacter::BuildConnectorDown);
+	PlayerInputComponent->BindAction("BuildConnectorLeft", EInputEvent::IE_Pressed, this,
+	                                 &AGridRunnerCharacter::BuildConnectorLeft);
+	PlayerInputComponent->BindAction("BuildConnectorRight", EInputEvent::IE_Pressed, this,
+	                                 &AGridRunnerCharacter::BuildConnectorRight);
+	PlayerInputComponent->BindAction("BuildConnectorStraight", EInputEvent::IE_Pressed, this,
+	                                 &AGridRunnerCharacter::BuildConnectorStraight);
 }
 
 void AGridRunnerCharacter::TogglePointsVisible()
@@ -63,9 +66,10 @@ void AGridRunnerCharacter::BuildConnector(FVector Direction)
 
 	// const FVector Start = GetCapsuleComponent()->GetComponentLocation() + (GetCapsuleComponent()->GetForwardVector() * StartHitOffset);
 	// const FVector End = Start + GetCapsuleComponent()->GetForwardVector() * EndHitOffset;
-	
-	
-	const FVector Start = GetArrowComponent()->GetComponentLocation() + GetArrowComponent()->GetForwardVector() * StartHitOffset;
+
+
+	const FVector Start = GetArrowComponent()->GetComponentLocation() + GetArrowComponent()->GetForwardVector() *
+		StartHitOffset;
 	const FVector End = Start + GetArrowComponent()->GetForwardVector() * EndHitOffset;
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Green, true, -1, 0, 4);
@@ -80,7 +84,7 @@ void AGridRunnerCharacter::BuildConnector(FVector Direction)
 		ECC_GameTraceChannel1,
 		Sphere);
 
-	if(HasHit)
+	if (HasHit)
 	{
 		GridPoints->BuildConnection(HitResult.GetActor(), Direction);
 		ConnectorSplineRef = GridPoints->GetConnectorSpline();
@@ -117,5 +121,3 @@ void AGridRunnerCharacter::BuildConnectorStraight()
 {
 	BuildConnector(GetActorForwardVector());
 }
-
-

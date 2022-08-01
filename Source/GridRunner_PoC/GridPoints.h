@@ -13,8 +13,8 @@ UCLASS()
 class GRIDRUNNER_POC_API AGridPoints : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AGridPoints();
 
@@ -23,18 +23,16 @@ protected:
 	virtual void BeginPlay() override;
 	void SetConnectorSpline(AActor* GeneratedActor);
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	void SelectedPoint(AActor* HitActor);
-
+	
 	void TogglePointsVisible();
 
 	USplineComponent* GetConnectorSpline();
 
 	void BuildConnection(AActor* StartPoint, FVector Direction);
-	
+
 
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -42,7 +40,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AConnector> ConnectorClass;
-	
+
 	TArray<APointActor*> SelectedPoints;
 	TArray<APointActor*> Points;
 
