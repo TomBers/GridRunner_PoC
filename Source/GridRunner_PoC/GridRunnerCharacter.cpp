@@ -5,8 +5,10 @@
 
 #include "GridPoints.h"
 #include "Components/ArrowComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Math/Vector.h"
+#include "Subsystems/EditorActorSubsystem.h"
 
 // Sets default values
 AGridRunnerCharacter::AGridRunnerCharacter()
@@ -53,6 +55,9 @@ void AGridRunnerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	                                 &AGridRunnerCharacter::BuildConnectorRight);
 	PlayerInputComponent->BindAction("BuildConnectorStraight", EInputEvent::IE_Pressed, this,
 	                                 &AGridRunnerCharacter::BuildConnectorStraight);
+
+	PlayerInputComponent->BindAction("Rotate", EInputEvent::IE_Pressed, this,
+									 &AGridRunnerCharacter::ChangeDirection);
 }
 
 void AGridRunnerCharacter::TogglePointsVisible()
@@ -63,16 +68,12 @@ void AGridRunnerCharacter::TogglePointsVisible()
 void AGridRunnerCharacter::BuildConnector(FVector Direction)
 {
 	FHitResult HitResult;
-
-	// const FVector Start = GetCapsuleComponent()->GetComponentLocation() + (GetCapsuleComponent()->GetForwardVector() * StartHitOffset);
-	// const FVector End = Start + GetCapsuleComponent()->GetForwardVector() * EndHitOffset;
-
-
+	
 	const FVector Start = GetArrowComponent()->GetComponentLocation() + GetArrowComponent()->GetForwardVector() *
 		StartHitOffset;
 	const FVector End = Start + GetArrowComponent()->GetForwardVector() * EndHitOffset;
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, true, -1, 0, 4);
+	// DrawDebugLine(GetWorld(), Start, End, FColor::Green, true, -1, 0, 4);
 
 	FCollisionShape Sphere = FCollisionShape::MakeSphere(10.f);
 
@@ -120,4 +121,9 @@ void AGridRunnerCharacter::BuildConnectorRight()
 void AGridRunnerCharacter::BuildConnectorStraight()
 {
 	BuildConnector(GetActorForwardVector());
+}
+
+void AGridRunnerCharacter::ChangeDirection()
+{
+	BuildConnector(-GetActorForwardVector());
 }

@@ -1,8 +1,4 @@
 Got version riding a dynamically created track.
 
-0) Write a Debug method to draw arrow for rotation
-
-1) For Some Reason Up/Down Transitions go the 'Wrong Way' on the third transition, preventing a full loop the loop???
-
-2) Replace Timeline movement with forward and back buttons??
+1) Replace Timeline movement with forward and back buttons??
 

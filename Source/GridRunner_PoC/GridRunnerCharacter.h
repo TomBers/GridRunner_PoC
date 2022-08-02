@@ -31,6 +31,7 @@ public:
 	void BuildConnectorLeft();
 	void BuildConnectorRight();
 	void BuildConnectorStraight();
+	void ChangeDirection();
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void TogglePointsVisible();
