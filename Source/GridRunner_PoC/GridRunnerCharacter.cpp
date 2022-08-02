@@ -77,18 +77,21 @@ void AGridRunnerCharacter::BuildConnector(FVector Direction)
 
 	FCollisionShape Sphere = FCollisionShape::MakeSphere(10.f);
 
-	bool HasHit = GetWorld()->SweepSingleByChannel(
-		HitResult,
-		Start,
-		End,
-		FQuat::Identity,
-		ECC_GameTraceChannel1,
-		Sphere);
-
-	if (HasHit)
+	if(GetWorld() != nullptr)
 	{
-		GridPoints->BuildConnection(HitResult.GetActor(), Direction);
-		ConnectorSplineRef = GridPoints->GetConnectorSpline();
+		bool HasHit = GetWorld()->SweepSingleByChannel(
+			HitResult,
+			Start,
+			End,
+			FQuat::Identity,
+			ECC_GameTraceChannel1,
+			Sphere);
+
+		if (HasHit)
+		{
+			GridPoints->BuildConnection(HitResult.GetActor(), Direction);
+			ConnectorSplineRef = GridPoints->GetConnectorSpline();
+		}
 	}
 }
 

@@ -56,16 +56,16 @@ private:
 	void ConnectPoints(APointActor* StartPoint, APointActor* EndPoint);
 
 	UPROPERTY(EditAnywhere)
-	int NUM_X = 1;
+	int NUM_X = 5;
 
 	UPROPERTY(EditAnywhere)
-	int NUM_Y = 1;
+	int NUM_Y = 5;
 
 	UPROPERTY(EditAnywhere)
-	int NUM_Z = 1;
+	int NUM_Z = 5;
 
 	UPROPERTY(EditAnywhere)
-	int GAP = 100;
+	int GAP = 250;
 
 	UPROPERTY(EditAnywhere)
 	int Z_OFFSET = 50;

@@ -100,6 +100,7 @@ void AGridPoints::BuildConnection(AActor* StartPoint, FVector Direction)
 
 	FVector Location = StartPoint->GetActorLocation();
 	FRotator Rot = Direction.Rotation();
+
 	AActor* SpawnedActor = GetWorld()->SpawnActor(ConnectorClass, &Location, &Rot);
 	SetConnectorSpline(SpawnedActor);
 }
