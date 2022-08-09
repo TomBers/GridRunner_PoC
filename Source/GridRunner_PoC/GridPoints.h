@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Connector.h"
 #include "PointActor.h"
-#include "GameFramework/Actor.h"
 #include "GridPoints.generated.h"
 
 

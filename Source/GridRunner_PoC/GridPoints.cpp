@@ -3,8 +3,6 @@
 
 #include "GridPoints.h"
 
-#include "VectorUtil.h"
-#include "Kismet/KismetArrayLibrary.h"
 
 // Sets default values
 AGridPoints::AGridPoints()
@@ -96,13 +94,11 @@ void AGridPoints::ConnectPoints(APointActor* StartPoint, APointActor* EndPoint)
 
 void AGridPoints::BuildConnection(AActor* StartPoint, FVector Direction)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("Actor : %s"), *StartPoint->GetName());
-
-	FVector Location = StartPoint->GetActorLocation();
-	FRotator Rot = Direction.Rotation();
-
-	AActor* SpawnedActor = GetWorld()->SpawnActor(ConnectorClass, &Location, &Rot);
-	SetConnectorSpline(SpawnedActor);
+		FVector Location = StartPoint->GetActorLocation();
+		FRotator Rot = Direction.Rotation();
+		AActor* SpawnedActor = StartPoint->GetWorld()->SpawnActor(ConnectorClass, &Location, &Rot);
+		SetConnectorSpline(SpawnedActor);
+	
 }
 
 void AGridPoints::TogglePointsVisible()

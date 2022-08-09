@@ -89,6 +89,7 @@ void AGridRunnerCharacter::BuildConnector(FVector Direction)
 
 		if (HasHit)
 		{
+		    UE_LOG(LogTemp, Warning, TEXT("In the HasHit %s"), *HitResult.GetActor()->GetName());
 			GridPoints->BuildConnection(HitResult.GetActor(), Direction);
 			ConnectorSplineRef = GridPoints->GetConnectorSpline();
 		}
