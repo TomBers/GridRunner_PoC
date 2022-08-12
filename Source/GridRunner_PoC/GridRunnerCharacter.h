@@ -55,9 +55,8 @@ public:
 	float Z_OFFSET = 0.f;
 
 private:
+	// TODO - find a way of not tieing this to a particular instance, it crashed as it was pointing to the GridPoints of another level
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<AGridPoints> GridPoints;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AConnector> ConnectorClass;
+	
 };

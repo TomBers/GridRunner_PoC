@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Connector.h"
+#include "Enemy.h"
 #include "PointActor.h"
 #include "GridPoints.generated.h"
 
@@ -20,6 +21,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void CreateEnemy(int Indx);
 	void SetConnectorSpline(AActor* GeneratedActor);
 
 public:
@@ -40,6 +42,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AConnector> ConnectorClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AEnemy> EnemyClass;
+	
 	TArray<APointActor*> SelectedPoints;
 	TArray<APointActor*> Points;
 
@@ -53,6 +58,9 @@ private:
 	void TurnOnPoint(APointActor* Point);
 	void TurnOffPoint(APointActor* Point);
 	void ConnectPoints(APointActor* StartPoint, APointActor* EndPoint);
+
+	UPROPERTY(EditAnywhere)
+	int NUM_ENEMY = 1;
 
 	UPROPERTY(EditAnywhere)
 	int NUM_X = 5;

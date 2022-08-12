@@ -36,11 +36,45 @@ void AGridPoints::BeginPlay()
 	if (ConnectorClass != nullptr)
 	{
 		// TODO - generate a random start position??
+		// Should use function to gen??
 		int indx = 8;
 		FVector loc = Points[indx]->GetActorLocation();
 		FRotator rot = Points[indx]->GetActorRotation();
 		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
 		SetConnectorSpline(ConnActor);
+	}
+
+	// Generate Enemy Connector
+	// for(int enemy = 0; enemy < NUM_ENEMY; enemy++)
+	// {
+		CreateEnemy(3);
+	//}
+}
+
+void AGridPoints::CreateEnemy(int Indx)
+{
+	if (ConnectorClass != nullptr && EnemyClass != nullptr)
+	{
+		// Create Connector
+		FVector loc = Points[Indx]->GetActorLocation();
+		FRotator rot = Points[Indx]->GetActorRotation();
+		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
+
+		AConnector* Connector = Cast<AConnector>(ConnActor);
+		
+		if(Connector)
+		{
+			AActor* EnemyActor = GetWorld()->SpawnActor(EnemyClass, &loc, &rot);
+
+			AEnemy* Enemy = Cast<AEnemy>(EnemyActor);
+
+			if(Enemy)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("CreateEnemy"));
+				Enemy->SetConnectorSplineRef(Connector->GetSpline());
+			}
+		}
+		
 	}
 }
 
