@@ -18,10 +18,6 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Setup Internal timer to move towards character every X secs
-	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AEnemy::MoveTowardCharacter, 5.f, true);
 	
 }
 
@@ -32,7 +28,7 @@ void AEnemy::Tick(float DeltaTime)
 
 }
 
-void AEnemy::MoveTowardCharacter()
+std::tuple<AActor*, FVector> AEnemy::MoveTowardCharacter()
 {
 	UE_LOG(LogTemp, Warning, TEXT("MoveTowardCharacter"));
 
@@ -42,16 +38,14 @@ void AEnemy::MoveTowardCharacter()
 	const FVector Start = GetActorLocation();
 	DrawDebugLine(GetWorld(), Start, Character->GetActorLocation(), FColor::Green, true, -1, 0, 4);
 	
-	// const FVector End = Character->GetActorLocation();
-	// DrawDebug Line from Enemy to Character
-	// 
+	// Do the HitTest as with the Player character to get the Actor, then need to calculate which direction is closest!!
 
 	// Find closest direction to character and build a connector there
 	// Find Forward facing node
 	// Step 1 - build connector in random direction
 	// Step 2 - From node calculate distance between potential connector endpoint and character - build the connector to the one with the smallest distance??
 	
-	
+	return {Character->GetParentActor(), FVector(0,0,0)};
 }
 
 void AEnemy::SetConnectorSplineRef(USplineComponent* Spline)

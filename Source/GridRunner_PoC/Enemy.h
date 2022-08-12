@@ -26,8 +26,8 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite)
 	USplineComponent* EnemyConnector;
-	
-	void MoveTowardCharacter();
+
+	std::tuple<AActor*, FVector> MoveTowardCharacter();
 
 	void SetConnectorSplineRef(USplineComponent* Spline);
 	

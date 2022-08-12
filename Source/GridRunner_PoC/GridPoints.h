@@ -21,6 +21,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void MoveEnemies();
 	void CreateEnemy(int Indx);
 	void SetConnectorSpline(AActor* GeneratedActor);
 
@@ -32,7 +33,8 @@ public:
 
 	USplineComponent* GetConnectorSpline();
 
-	void BuildConnection(AActor* StartPoint, FVector Direction);
+	USplineComponent* BuildCharacterConnection(AActor* StartPoint, FVector Direction);
+	USplineComponent* BuildEnemyConnection(AActor* StartPoint, FVector Direction);
 
 
 private:
@@ -49,6 +51,8 @@ private:
 	TArray<APointActor*> Points;
 
 	TArray<AConnector*> Connectors;
+
+	TArray<AEnemy*> Enemies;
 
 	FName SelectedTag = "GRABBED";
 
