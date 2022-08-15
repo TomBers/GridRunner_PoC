@@ -28,27 +28,56 @@ void AEnemy::Tick(float DeltaTime)
 
 }
 
-std::tuple<AActor*, FVector> AEnemy::MoveTowardCharacter()
+std::tuple<bool, AActor*, FVector> AEnemy::MoveTowardCharacter()
 {
 	UE_LOG(LogTemp, Warning, TEXT("MoveTowardCharacter"));
 
 	ACharacter* Character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	DrawDebugLine(GetWorld(), GetActorLocation(), Character->GetActorLocation(), FColor::Green, true, -1, 0, 4);
 	
+	
+	FHitResult HitResult;
+	
+	const FVector Start = GetActorLocation() + GetActorForwardVector();
+	const FVector End = Start + GetActorForwardVector() * HitTestExtensionValue;
 
-	const FVector Start = GetActorLocation();
-	DrawDebugLine(GetWorld(), Start, Character->GetActorLocation(), FColor::Green, true, -1, 0, 4);
-	
-	// Do the HitTest as with the Player character to get the Actor, then need to calculate which direction is closest!!
 
-	// Find closest direction to character and build a connector there
-	// Find Forward facing node
-	// Step 1 - build connector in random direction
-	// Step 2 - From node calculate distance between potential connector endpoint and character - build the connector to the one with the smallest distance??
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(10.f);
+
+	bool HasHit = GetWorld()->SweepSingleByChannel(
+			HitResult,
+			Start,
+			End,
+			FQuat::Identity,
+			ECC_GameTraceChannel1,
+			Sphere);
 	
-	return {Character->GetParentActor(), FVector(0,0,0)};
+	return {HasHit, HitResult.GetActor(), GetClosestDirection(Character->GetActorLocation())};
 }
 
 void AEnemy::SetConnectorSplineRef(USplineComponent* Spline)
 {
 	EnemyConnector = Spline;
+}
+
+FVector AEnemy::GetClosestDirection(FVector CharacterLoc)
+{
+	FVector MyLoc = GetActorLocation();
+	TArray<FVector> Directions = TArray({GetActorForwardVector(), -GetActorForwardVector(), GetActorUpVector(), -GetActorUpVector(), GetActorRightVector(), -GetActorRightVector()});
+	float MinDist = 5000000;
+	int MinIdx = 0;
+	// TODO - Get the distance between the Character location and each direction, go in the shortest
+	for(int i = 0; i < Directions.Num(); i++)
+	{
+		FVector Start = MyLoc + Directions[i] * HitTestExtensionValue;
+		FVector End = CharacterLoc;
+		float Dist = FVector::Dist(Start, End);
+		if(Dist <= MinDist)
+		{
+			MinDist = Dist;
+			MinIdx = i;
+		}
+	}
+	
+	return Directions[MinIdx];
 }

@@ -60,9 +60,12 @@ void AGridPoints::MoveEnemies()
 	for (AEnemy* Enemy : Enemies)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Enemy %s"), *Enemy->GetName());
-		auto [actor, direction] = Enemy->MoveTowardCharacter();
+		auto [HasHit, Actor, Direction] = Enemy->MoveTowardCharacter();
 
-		Enemy->SetConnectorSplineRef(BuildEnemyConnection(actor, direction));
+		if(HasHit)
+		{
+			Enemy->SetConnectorSplineRef(BuildEnemyConnection(Actor, Direction));
+		}
 	}
 }
 
