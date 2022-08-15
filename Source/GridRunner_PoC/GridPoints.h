@@ -45,6 +45,9 @@ private:
 	TSubclassOf<AConnector> ConnectorClass;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AConnector> EnemyConnectorClass;
+	
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AEnemy> EnemyClass;
 	
 	TArray<APointActor*> SelectedPoints;

@@ -33,7 +33,7 @@ std::tuple<bool, AActor*, FVector> AEnemy::MoveTowardCharacter()
 	UE_LOG(LogTemp, Warning, TEXT("MoveTowardCharacter"));
 
 	ACharacter* Character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	DrawDebugLine(GetWorld(), GetActorLocation(), Character->GetActorLocation(), FColor::Green, true, -1, 0, 4);
+	// DrawDebugLine(GetWorld(), GetActorLocation(), Character->GetActorLocation(), FColor::Green, true, -1, 0, 4);
 	
 	
 	FHitResult HitResult;

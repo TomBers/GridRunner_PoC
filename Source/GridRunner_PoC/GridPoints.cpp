@@ -71,12 +71,12 @@ void AGridPoints::MoveEnemies()
 
 void AGridPoints::CreateEnemy(int Indx)
 {
-	if (ConnectorClass != nullptr && EnemyClass != nullptr)
+	if (EnemyConnectorClass != nullptr && EnemyClass != nullptr)
 	{
 		// Create Connector
 		FVector loc = Points[Indx]->GetActorLocation();
 		FRotator rot = Points[Indx]->GetActorRotation();
-		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
+		AActor* ConnActor = GetWorld()->SpawnActor(EnemyConnectorClass, &loc, &rot);
 
 		AConnector* Connector = Cast<AConnector>(ConnActor);
 		
@@ -160,7 +160,7 @@ USplineComponent* AGridPoints::BuildEnemyConnection(AActor* StartPoint, FVector 
 {
 	FVector Location = StartPoint->GetActorLocation();
 	FRotator Rot = Direction.Rotation();
-	AActor* SpawnedActor = StartPoint->GetWorld()->SpawnActor(ConnectorClass, &Location, &Rot);
+	AActor* SpawnedActor = StartPoint->GetWorld()->SpawnActor(EnemyConnectorClass, &Location, &Rot);
 	
 	AConnector* Connector = Cast<AConnector>(SpawnedActor);
 	return Connector->GetSpline();
