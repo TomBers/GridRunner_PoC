@@ -1,4 +1,16 @@
-Got version riding a dynamically created track.
+0) Polish
+    a) Make Enemy torus smaller
+    b) Make Grid point smaller / different texture
+    
+1) Win conditions
+    a) Declare the caught when the enemy is on same spline?
+    b) Have some sort of combat ?
 
-1) Replace Timeline movement with forward and back buttons??
+2) Point-cloud - have more interesting starting grid
+
+3) Add curve to spline??
+
+4) Have multiple enemies
+
+5) Building connections - what happens when we reach the edge of the grid?
 
