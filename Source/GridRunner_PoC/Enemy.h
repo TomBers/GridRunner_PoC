@@ -26,9 +26,12 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite)
 	USplineComponent* EnemyConnector;
-	
-	void MoveTowardCharacter();
+
+	std::tuple<bool, AActor*, FVector> MoveTowardCharacter();
 
 	void SetConnectorSplineRef(USplineComponent* Spline);
-	
+	FVector GetClosestDirection(FVector CharacterLoc);
+
+private:
+	float HitTestExtensionValue = 50.f;
 };

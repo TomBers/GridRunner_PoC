@@ -49,16 +49,34 @@ void AGridPoints::BeginPlay()
 	// {
 		CreateEnemy(3);
 	//}
+	
+	// Setup Internal timer to move towards enemy every X secs
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AGridPoints::MoveEnemies, 5.f, true);
+}
+
+void AGridPoints::MoveEnemies()
+{
+	for (AEnemy* Enemy : Enemies)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Enemy %s"), *Enemy->GetName());
+		auto [HasHit, Actor, Direction] = Enemy->MoveTowardCharacter();
+
+		if(HasHit)
+		{
+			Enemy->SetConnectorSplineRef(BuildEnemyConnection(Actor, Direction));
+		}
+	}
 }
 
 void AGridPoints::CreateEnemy(int Indx)
 {
-	if (ConnectorClass != nullptr && EnemyClass != nullptr)
+	if (EnemyConnectorClass != nullptr && EnemyClass != nullptr)
 	{
 		// Create Connector
 		FVector loc = Points[Indx]->GetActorLocation();
 		FRotator rot = Points[Indx]->GetActorRotation();
-		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
+		AActor* ConnActor = GetWorld()->SpawnActor(EnemyConnectorClass, &loc, &rot);
 
 		AConnector* Connector = Cast<AConnector>(ConnActor);
 		
@@ -72,6 +90,7 @@ void AGridPoints::CreateEnemy(int Indx)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("CreateEnemy"));
 				Enemy->SetConnectorSplineRef(Connector->GetSpline());
+				Enemies.Push(Enemy);
 			}
 		}
 		
@@ -126,13 +145,25 @@ void AGridPoints::ConnectPoints(APointActor* StartPoint, APointActor* EndPoint)
 	GetWorld()->SpawnActor(ConnectorClass, &sloc, &rot);
 }
 
-void AGridPoints::BuildConnection(AActor* StartPoint, FVector Direction)
+USplineComponent* AGridPoints::BuildCharacterConnection(AActor* StartPoint, FVector Direction)
 {
 		FVector Location = StartPoint->GetActorLocation();
 		FRotator Rot = Direction.Rotation();
 		AActor* SpawnedActor = StartPoint->GetWorld()->SpawnActor(ConnectorClass, &Location, &Rot);
 		SetConnectorSpline(SpawnedActor);
+
+		AConnector* Connector = Cast<AConnector>(SpawnedActor);
+		return Connector->GetSpline();
+}
+
+USplineComponent* AGridPoints::BuildEnemyConnection(AActor* StartPoint, FVector Direction)
+{
+	FVector Location = StartPoint->GetActorLocation();
+	FRotator Rot = Direction.Rotation();
+	AActor* SpawnedActor = StartPoint->GetWorld()->SpawnActor(EnemyConnectorClass, &Location, &Rot);
 	
+	AConnector* Connector = Cast<AConnector>(SpawnedActor);
+	return Connector->GetSpline();
 }
 
 void AGridPoints::TogglePointsVisible()
