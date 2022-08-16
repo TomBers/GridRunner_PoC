@@ -35,9 +35,7 @@ void AGridPoints::BeginPlay()
 	// Generate an random initial connector
 	if (ConnectorClass != nullptr)
 	{
-		// TODO - generate a random start position??
-		// Should use function to gen??
-		int indx = 8;
+		int indx = GenerateRandomIndx();
 		FVector loc = Points[indx]->GetActorLocation();
 		FRotator rot = Points[indx]->GetActorRotation();
 		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
@@ -45,10 +43,10 @@ void AGridPoints::BeginPlay()
 	}
 
 	// Generate Enemy Connector
-	// for(int enemy = 0; enemy < NUM_ENEMY; enemy++)
-	// {
-		CreateEnemy(3);
-	//}
+	for(int enemy = 0; enemy < NUM_ENEMY; enemy++)
+	{
+		CreateEnemy(GenerateRandomIndx());
+	}
 	
 	// Setup Internal timer to move towards enemy every X secs
 	FTimerHandle TimerHandle;
@@ -189,4 +187,11 @@ void AGridPoints::TogglePointsVisible()
 USplineComponent* AGridPoints::GetConnectorSpline()
 {
 	return ConnectorSpline;
+}
+
+int AGridPoints::GenerateRandomIndx()
+{
+	int max = NUM_X * NUM_Y * NUM_Z;
+	
+	return rand() % max;
 }

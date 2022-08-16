@@ -8,9 +8,7 @@
 
 2) Point-cloud - have more interesting starting grid
 
-3) Add curve to spline??
+3) Have multiple enemies (With Random start positions)
 
-4) Have multiple enemies
-
-5) Building connections - what happens when we reach the edge of the grid?
+4) Building connections - what happens when we reach the edge of the grid?
 
