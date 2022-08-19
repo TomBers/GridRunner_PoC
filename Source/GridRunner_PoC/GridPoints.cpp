@@ -151,8 +151,7 @@ USplineComponent* AGridPoints::BuildCharacterConnection(AActor* StartPoint, FVec
 		SetConnectorSpline(SpawnedActor);
 
 		AConnector* Connector = Cast<AConnector>(SpawnedActor);
-
-		// TODO create new node if no one is ahead
+	
 		MaybeCreateNewNode(Location, Direction);
 	
 		return Connector->GetSpline();
@@ -188,6 +187,8 @@ USplineComponent* AGridPoints::BuildEnemyConnection(AActor* StartPoint, FVector 
 	FVector Location = StartPoint->GetActorLocation();
 	FRotator Rot = Direction.Rotation();
 	AActor* SpawnedActor = StartPoint->GetWorld()->SpawnActor(EnemyConnectorClass, &Location, &Rot);
+
+	MaybeCreateNewNode(Location, Direction);
 	
 	AConnector* Connector = Cast<AConnector>(SpawnedActor);
 	return Connector->GetSpline();
@@ -220,6 +221,7 @@ USplineComponent* AGridPoints::GetConnectorSpline()
 
 int AGridPoints::GenerateRandomIndx()
 {
+	// TODO Make sure not to generate on the outside of the grid??
 	int max = NUM_X * NUM_Y * NUM_Z;
 	
 	return rand() % max;
