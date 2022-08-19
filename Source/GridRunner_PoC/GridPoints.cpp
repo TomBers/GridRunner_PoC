@@ -151,7 +151,36 @@ USplineComponent* AGridPoints::BuildCharacterConnection(AActor* StartPoint, FVec
 		SetConnectorSpline(SpawnedActor);
 
 		AConnector* Connector = Cast<AConnector>(SpawnedActor);
+
+		// TODO create new node if no one is ahead
+		MaybeCreateNewNode(Location, Direction);
+	
 		return Connector->GetSpline();
+}
+
+void AGridPoints::MaybeCreateNewNode(FVector Location, FVector Direction)
+{
+	FVector LineStart = Location;
+	FVector LineEnd = LineStart + Direction * GAP;
+
+	FHitResult HitResult;
+
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(10.f);
+
+	bool HasHit = GetWorld()->SweepSingleByChannel(
+			HitResult,
+			LineStart,
+			LineEnd,
+			FQuat::Identity,
+			ECC_GameTraceChannel1,
+			Sphere);
+
+	if(!HasHit)
+	{
+		//  TODO - add more defensive checks here incase of null's etc
+		Points.Push(Cast<APointActor>(GetWorld()->SpawnActor(PointClass, &LineEnd)));
+	}
+	
 }
 
 USplineComponent* AGridPoints::BuildEnemyConnection(AActor* StartPoint, FVector Direction)

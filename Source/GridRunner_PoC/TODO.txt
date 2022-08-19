@@ -11,4 +11,6 @@
 3) Have multiple enemies (With Random start positions)
 
 4) Building connections - what happens when we reach the edge of the grid?
+a) Have a test to see if there is a node in front
+b) if not - add it (where?)
 
