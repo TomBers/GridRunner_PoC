@@ -32,8 +32,10 @@ public:
 	void TogglePointsVisible();
 
 	USplineComponent* GetConnectorSpline();
+	int GenerateRandomIndx();
 
 	USplineComponent* BuildCharacterConnection(AActor* StartPoint, FVector Direction);
+	void MaybeCreateNewNode(FVector Location, FVector Direction);
 	USplineComponent* BuildEnemyConnection(AActor* StartPoint, FVector Direction);
 
 

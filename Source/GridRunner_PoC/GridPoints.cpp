@@ -35,9 +35,8 @@ void AGridPoints::BeginPlay()
 	// Generate an random initial connector
 	if (ConnectorClass != nullptr)
 	{
-		// TODO - generate a random start position??
-		// Should use function to gen??
-		int indx = 8;
+		int indx = 1;//GenerateRandomIndx();
+		// UE_LOG(LogTemp, Warning, TEXT("Character spawned at %i"), indx);
 		FVector loc = Points[indx]->GetActorLocation();
 		FRotator rot = Points[indx]->GetActorRotation();
 		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
@@ -45,10 +44,10 @@ void AGridPoints::BeginPlay()
 	}
 
 	// Generate Enemy Connector
-	// for(int enemy = 0; enemy < NUM_ENEMY; enemy++)
-	// {
-		CreateEnemy(3);
-	//}
+	for(int enemy = 0; enemy < NUM_ENEMY; enemy++)
+	{
+		CreateEnemy(GenerateRandomIndx());
+	}
 	
 	// Setup Internal timer to move towards enemy every X secs
 	FTimerHandle TimerHandle;
@@ -153,7 +152,35 @@ USplineComponent* AGridPoints::BuildCharacterConnection(AActor* StartPoint, FVec
 		SetConnectorSpline(SpawnedActor);
 
 		AConnector* Connector = Cast<AConnector>(SpawnedActor);
+	
+		MaybeCreateNewNode(Location, Direction);
+	
 		return Connector->GetSpline();
+}
+
+void AGridPoints::MaybeCreateNewNode(FVector Location, FVector Direction)
+{
+	FVector LineStart = Location;
+	FVector LineEnd = LineStart + Direction * GAP;
+
+	FHitResult HitResult;
+
+	FCollisionShape Sphere = FCollisionShape::MakeSphere(10.f);
+
+	bool HasHit = GetWorld()->SweepSingleByChannel(
+			HitResult,
+			LineStart,
+			LineEnd,
+			FQuat::Identity,
+			ECC_GameTraceChannel1,
+			Sphere);
+
+	if(!HasHit)
+	{
+		//  TODO - add more defensive checks here incase of null's etc
+		Points.Push(Cast<APointActor>(GetWorld()->SpawnActor(PointClass, &LineEnd)));
+	}
+	
 }
 
 USplineComponent* AGridPoints::BuildEnemyConnection(AActor* StartPoint, FVector Direction)
@@ -161,6 +188,8 @@ USplineComponent* AGridPoints::BuildEnemyConnection(AActor* StartPoint, FVector 
 	FVector Location = StartPoint->GetActorLocation();
 	FRotator Rot = Direction.Rotation();
 	AActor* SpawnedActor = StartPoint->GetWorld()->SpawnActor(EnemyConnectorClass, &Location, &Rot);
+
+	MaybeCreateNewNode(Location, Direction);
 	
 	AConnector* Connector = Cast<AConnector>(SpawnedActor);
 	return Connector->GetSpline();
@@ -189,4 +218,13 @@ void AGridPoints::TogglePointsVisible()
 USplineComponent* AGridPoints::GetConnectorSpline()
 {
 	return ConnectorSpline;
+}
+
+int AGridPoints::GenerateRandomIndx()
+{
+	int StartingPositions[10] = {8, 20, 33, 44, 55, 66, 77, 88, 99, 111};
+	int RandIdx = rand() % 10;
+	// int max = NUM_X * NUM_Y * NUM_Z;
+	// return rand() % max;
+	return StartingPositions[RandIdx];
 }
