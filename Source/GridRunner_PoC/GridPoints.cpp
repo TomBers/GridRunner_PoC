@@ -35,7 +35,8 @@ void AGridPoints::BeginPlay()
 	// Generate an random initial connector
 	if (ConnectorClass != nullptr)
 	{
-		int indx = GenerateRandomIndx();
+		int indx = 1;//GenerateRandomIndx();
+		// UE_LOG(LogTemp, Warning, TEXT("Character spawned at %i"), indx);
 		FVector loc = Points[indx]->GetActorLocation();
 		FRotator rot = Points[indx]->GetActorRotation();
 		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
@@ -221,8 +222,9 @@ USplineComponent* AGridPoints::GetConnectorSpline()
 
 int AGridPoints::GenerateRandomIndx()
 {
-	// TODO Make sure not to generate on the outside of the grid??
-	int max = NUM_X * NUM_Y * NUM_Z;
-	
-	return rand() % max;
+	int StartingPositions[10] = {8, 20, 33, 44, 55, 66, 77, 88, 99, 111};
+	int RandIdx = rand() % 10;
+	// int max = NUM_X * NUM_Y * NUM_Z;
+	// return rand() % max;
+	return StartingPositions[RandIdx];
 }
