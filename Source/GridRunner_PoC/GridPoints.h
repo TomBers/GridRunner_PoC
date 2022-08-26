@@ -6,6 +6,7 @@
 #include "Connector.h"
 #include "Enemy.h"
 #include "PointActor.h"
+#include "Engine/DataTable.h"
 #include "GridPoints.generated.h"
 
 
@@ -51,6 +52,10 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AEnemy> EnemyClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	UDataTable* GridData;
+
 	
 	TArray<APointActor*> SelectedPoints;
 	TArray<APointActor*> Points;

@@ -3,6 +3,8 @@
 
 #include "GridPoints.h"
 
+#include "GridPointStruct.h"
+
 
 // Sets default values
 AGridPoints::AGridPoints()
@@ -16,30 +18,54 @@ void AGridPoints::BeginPlay()
 {
 	Super::BeginPlay();
 
-	for (int i = 0; i < NUM_X; i++)
+	if(GridData)
 	{
-		for (int j = 0; j < NUM_Y; j++)
+		TArray<FGridPointStruct *> Rows;
+		GridData->GetAllRows(TEXT(""), Rows);
+		for(FGridPointStruct* Row : Rows)
 		{
-			for (int k = 0; k < NUM_Z; k++)
-			{
-				int x = i * GAP;
-				int y = j * GAP;
-				int z = k * GAP + Z_OFFSET;
-				FVector loc = FVector(x, y, z);
-				//  TODO - add more defensive checks here incase of null's etc
-				Points.Push(Cast<APointActor>(GetWorld()->SpawnActor(PointClass, &loc)));
-			}
+			float rx = Row->x;
+			float ry = Row->y;
+			float rz = Row->z;
+			FVector rloc = FVector(rx, ry, rz);
+			Points.Push(Cast<APointActor>(GetWorld()->SpawnActor(PointClass, &rloc)));
+			UE_LOG(LogTemp, Warning, TEXT("x %f, y %f, z %f"), rx, ry, rz);
 		}
 	}
+	
+
+	// for (int i = 0; i < NUM_X; i++)
+	// {
+	// 	for (int j = 0; j < NUM_Y; j++)
+	// 	{
+	// 		for (int k = 0; k < NUM_Z; k++)
+	// 		{
+	// 			int x = i * GAP;
+	// 			int y = j * GAP;
+	// 			int z = k * GAP + Z_OFFSET;
+	// 			FVector loc = FVector(x, y, z);
+	// 			//  TODO - add more defensive checks here incase of null's etc
+	// 			Points.Push(Cast<APointActor>(GetWorld()->SpawnActor(PointClass, &loc)));
+	// 		}
+	// 	}
+	// }
 
 	// Generate an random initial connector
 	if (ConnectorClass != nullptr)
 	{
 		int indx = 1;//GenerateRandomIndx();
 		// UE_LOG(LogTemp, Warning, TEXT("Character spawned at %i"), indx);
-		FVector loc = Points[indx]->GetActorLocation();
-		FRotator rot = Points[indx]->GetActorRotation();
-		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &loc, &rot);
+		FVector sloc = Points[indx]->GetActorLocation();
+		FVector eloc = Points[indx + 1]->GetActorLocation();
+		FVector diff = eloc - sloc;
+		
+		FRotator rot = diff.Rotation();
+		
+		// FRotator rot = Points[indx]->GetActorRotation();
+
+		// TODO - set Size to the distance between points
+		AActor* ConnActor = GetWorld()->SpawnActor(ConnectorClass, &sloc, &rot);
+		ConnActor->SetActorScale3D(FVector(diff.Length() / 100, 1.0, 1.0));
 		SetConnectorSpline(ConnActor);
 	}
 
@@ -226,5 +252,5 @@ int AGridPoints::GenerateRandomIndx()
 	int RandIdx = rand() % 10;
 	// int max = NUM_X * NUM_Y * NUM_Z;
 	// return rand() % max;
-	return StartingPositions[RandIdx];
+	return 2; //StartingPositions[RandIdx];
 }
